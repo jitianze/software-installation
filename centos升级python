@@ -4,8 +4,48 @@
 
 升级步骤
 1.安装一些编译软件和编译python相关模块的必备库
+
+```shell
    yum install gcc gcc-c++ zlib zlib-devel  libffi-devel openssl openssl-devel bzip2-devel readline-devel
+```
+   openssl openssl-devel #为编译python的ssl模块
+   readline-devel        #解决python交互模式下 上下左右键失灵问题
+   
 2.下载python2.7.13的压缩包，解压后进入文件夹
-./configure --prefix=/usr/local/python27 --enable-shared --with-ssl
+
+```shell
+./configure --prefix=/usr/local/python27 --enable-shared --with-ssl   #--enable-shared 生成python共享链接库
 make 
 make install
+\mv /usr/bin/python /usr/bin/python_old 
+ln -s /usr/local/python27/lib/libpython2.7.so /usr/lib
+ln -s /usr/local/python27/lib/libpython2.7.so.1.0 /usr/lib
+ln -s /usr/local/python27/bin/python /usr/bin/python
+echo "/usr/local/python27/lib" >> /etc/ld.so.conf
+ldconfig
+```
+
+3.安装setuptools
+下载 setuptool的压缩包 解压进入文件夹
+
+```shell
+/usr/local/python27/bin/python2.7 setup.py install
+ln -s /usr/local/python27/bin/easy_install /usr/bin/easy_install
+```
+
+4.安装pip
+下载 pip的压缩包 解压进入文件夹
+
+```shell
+/usr/local/python27/bin/python2.7 setup.py install
+ln -s /usr/local/python27/bin/pip /usr/bin/pip
+```
+
+5.修改yum 因升级python而导致的问题
+
+vi /usr/bin/yum 
+将第一行的/usr/bin/python 改为/usr/bin/python2.6 #改成你python原有版本
+
+```shell
+sudo sed -i ‘s@#!/usr/bin/python@#!/usr/bin/python2.6@‘ /usr/bin/yum
+```
