@@ -9,42 +9,29 @@ cd setuptools-1.4.2
 ln -s /usr/local/python27/bin/easy_install /usr/bin/easy_install
 
 #安装pip
-# cd ..
+# 下载pip安装包
 # tar -zxvf pip-6.0.7.tar.gz
 # cd pip-6.0.7
 # /usr/local/python27/bin/python2.7 setup.py install
 # ln -s /usr/local/python27/bin/pip /usr/bin/pip
 
 #安装PIL
-cd ..
+1.使用yum安装  yum install python-imaging
+2.通过复制PIL安装文件
 cp -R PIL /usr/local/python27/lib/python2.7/site-packages
 
 
 #安装pytesseract的依赖
-cd pytesseract_compile_preparation
-rpm -ivh *.rpm
-
-#安装libtools
-# cd ..
-# cd libtool
-# rpm -ivh *.rpm --force --nodeps
+yum install autoconf automake libtool autoconf-archive leptonica libpng libjpeg libtiff
 
 
-#安装 leptonica
+#使用安装 leptonica （一定要安装libtool）
 # cd ..
 # tar -zxvf leptonica-1.74.1.tar.gz 
 # cd leptonica-1.74.1
 # ./configure 
 # make 
 # make install 
-
-####################
-# 通过文件复制安装
-# cd ..
-# tar -zxvf leptonica.tar.gz
-# cp -R leptonica /usr/local/src/leptonica
-####################
-
 
 
 #下面开始安装tesseract-ocr
@@ -56,26 +43,19 @@ rpm -ivh *.rpm
 # make 
 # sudo make install 
 
-cd ..
-cd tesseract
-cp bin/* /usr/local/bin
-cp lib/* /usr/local/lib
-cp pkgconfig/*  /usr/local/lib/pkgconfig
-cp -R include/* /usr/local/include
-
 ln -s /usr/local/lib/libtesseract.so.3 /usr/lib
 ln -s /usr/local/lib/libtesseract.so.3 /usr/lib64
 
 
 #下面开始安装pytesseract
 #(1)pip install pytesseract
-cd ..
+
 unzip pytesseract-0.1.6.zip
 cd pytesseract-0.1.6
 /usr/local/python27/bin/python2.7 setup.py install
 
+#安装字体文件
 
-cd ..
 unzip tessdata-3.04.00.zip
 cd tessdata-3.04.00
 cp tessdata-3.04.00/* /usr/local/share/tessdata
