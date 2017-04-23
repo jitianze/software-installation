@@ -1,13 +1,85 @@
                                          在centos7上部署hadoop2.8
 
-1.安装gcc g++ cmake等编译工具
+
+#!/bin/bash
+
+#安装SSH、配置SSH无密码登陆
+
+#集群、单节点模式都需要用到 SSH 登陆（类似于远程登陆，你可以登录某台 Linux 主机，并且在上面运行命令），Ubuntu 默认已安装了 SSH client，此外还需要安装 SSH server：
+
+    sudo yum install openssh-server
+
+#安装后，可以使用如下命令登陆本机：
+
+    ssh localhost
+
+#此时会有如下提示(SSH首次登陆提示)，输入 yes 。然后按提示输入密码 hadoop，这样就登陆到本机了。
+
+#SSH首次登陆提示SSH首次登陆提示
+
+#但这样登陆是需要每次输入密码的，我们需要配置成SSH无密码登陆比较方便。
+
+#首先退出刚才的 ssh，就回到了我们原先的终端窗口，然后利用 ssh-keygen 生成密钥，并将密钥加入到授权中：
+
+    exit                           # 退出刚才的 ssh localhost
+    cd ~/.ssh/                     # 若没有该目录，请先执行一次ssh localhost
+    ssh-keygen -t rsa              # 会有提示，都按回车就可以
+    cat ./id_rsa.pub >> ./authorized_keys  # 加入授权
+
+
+
+# 1.install gcc g++
 yum -y install gcc gcc-c++
 
-cmake采用源码编译安装
-tar -zxvf cmake-3.6.3.tar.gz
-cd cmake-3.6.3
+# 2.install cmake3.6.3
+#（1）使用源码编译安装
+tar -zxvf cmake3.6.3.tar.gz
 ./bootstrap
 make
-sudo make install
+make install 
+# (2)使用yum安装，但是安装的版本可能较低
+yum install cmake 
+2.安装maven
+yum -y install maven
 
-2.
+(3)安装各种库
+yum -y install svn ncurses-devel
+yum -y install lzo-devel zlib-devel autoconf automake libtool openssl-devel
+
+（4）安装Google的protobuf2.5
+yum -y install protobuf-compiler
+
+(5)
+yum -y install ant
+
+(6)
+yum install fuse fuse-devel
+
+
+yum -y install jansson-devel
+
+yum -y install snappy snappy-devel
+
+（7）安装findbugs
+
+下载findbugs-3.0.1.tar.gz，选择上面的standard version即可
+解压缩并配置环境变量
+解压：
+tar -zxvf findbugs-3.0.1.tar.gz
+
+移动到 /opt目录下
+mv findbugs-3.0.1 /opt
+
+配置环境变量:
+ 
+在 /etc/profile 文件末尾添加：
+
+export FINDBUGS_HOME=/opt/findbugs-3.0.1
+export PATH=$PATH:$FINDBUGS_HOME/bin
+保存退出，并使更改生效source /etc/profile
+
+下载hadoop2.8源码文件
+tar -zxvf hadoop-2.8.0-src.tar.gz
+cd hadoop-2.8.0-src
+mvn package -Pdist,native -DskipTests -Dtar #或者mvn clean package –Pdist,native –DskipTests –Dtar
+#务必保持网络畅通，如果出现缺少某个文件，则要先清理maven(使用命令 mvn clean) 再重新编译。
