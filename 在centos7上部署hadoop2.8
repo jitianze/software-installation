@@ -3,6 +3,94 @@
 
 #!/bin/bash
 
+{                                               JAVA问题详解：
+
+安装方法：（1）下载可执行文件（即已经编译好的binary），设置环境变量即可
+         （2）使用yum 进行安装，此时无需设置环境变量
+ 
+ 一、安装jdk
+1.查看Linux自带的JDK是否已安装
+
+java –version
+
+如果出现openjdk，最好还是先卸载掉openjdk,在安装sun公司的jdk.
+卸载的原因是因为centos6.5自带的openjdk安装时，文件分散在各个目录下，很难找到JAVA_HOME的真正所在目录
+重新使用yum安装后，一般存放在一个文件夹下
+
+
+2.查看jdk信息
+
+rpm -qa|grep java
+
+3.卸载OpenJDK，执行以下操作：
+
+rpm -e --nodeps tzdata-java-2012c-1.el6.noarch  
+rpm -e --nodeps java-1.7.0-openjdk-1.7.0.45-1.45.1.11.1.el6.x86_64
+
+4.新建java安装目录
+
+mkdir /usr/java
+
+5.将之前下载的jdk解压缩并安装
+
+tar -zxvf  jdk-7u71-linux-i586.tar.gz
+
+6.在profile文件中加入java环境变量
+
+vi /etc/profile  
+
+export JAVA_HOME=/usr/java/jdk1.7.0_71  
+export CLASSPATH=.:%JAVA_HOME%/lib/dt.jar:%JAVA_HOME%/lib/tools.jar  
+export PATH=$PATH:$JAVA_HOME/bin
+
+7.使文件立即生效
+
+source /etc/profile     //或者reboot
+
+8.检测是否安装成功
+
+java -version
+
+
+二：使用yum进行安装：
+查看CentOS自带JDK是否已安装。
+输入：yum list installed |grep java。
+
+若有自带安装的JDK，如何卸载CentOS系统自带Java环境？
+卸载JDK相关文件输入：yum -y remove java-1.7.0-openjdk*。
+卸载tzdata-java输入：yum -y remove tzdata-java.noarch。
+
+  当结果显示为Complete！即卸载完毕。
+
+注：“*”表示卸载掉java 1.7.0的所有openjdk相关文件。
+
+
+检查CentOS系统网络连接是否正常。
+使用yum方式安装需要连接网络下载Java相应安装文件，故此需要使用ping命令测试网络；如：ping 百度URL即可。
+查看yum库中的Java安装包。
+输入：yum -y list java* 。
+
+输入：yum -y install java-1.7.0-openjdk* ，以yum库中java-1.7.0为例。 
+
+  当结果显示为Complete！即安装完毕。
+
+注：“*”表示将java-1.7.0的所有相关Java程序都安装上。
+在CentOS上安装Java环境：[1]使用yum安装java
+6
+
+查看刚安装的Java版本信息。
+
+◆输入：java -version 可查看Java版本；
+
+◆输入：javac 可查看Java的编译器命令用法（可略）。
+
+此时无需设置环境变量，JAVA_HOME一般在/usr/lib/jvm/java*(例如：/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.131.x86_64）
+
+}
+
+
+
+
 #安装SSH、配置SSH无密码登陆
 
 #集群、单节点模式都需要用到 SSH 登陆（类似于远程登陆，你可以登录某台 Linux 主机，并且在上面运行命令），Ubuntu 默认已安装了 SSH client，此外还需要安装 SSH server：
