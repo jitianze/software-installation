@@ -3,6 +3,10 @@
 
 #!/bin/bash
 
+
+第一种方法：使用源码编译，较为复杂，失败可能性极大。
+
+
 {                                               JAVA问题详解：
 
 安装方法：（1）下载可执行文件（即已经编译好的binary），设置环境变量即可
@@ -171,3 +175,31 @@ tar -zxvf hadoop-2.8.0-src.tar.gz
 cd hadoop-2.8.0-src
 mvn package -Pdist,native -DskipTests -Dtar #或者mvn clean package –Pdist,native –DskipTests –Dtar
 #务必保持网络畅通，如果出现缺少某个文件，则要先清理maven(使用命令 mvn clean) 再重新编译。
+
+
+第二种方法：下载已经编译好的文件，配置环境变量。
+1.ssh免密设置
+2.安装java，如上所述方法，centos6.5自带openjdk卸载，重新安装
+echo "export JAVA_HOME=java的安装目录" >> ~/.bashrc  
+#例如： echo "export JAVA_HOME=/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.131.x86_64" >> ~/.bashrc
+3.下载hadoop的可执行文件，即已经编译好的binary文件
+解压后放到任意文件夹 例如：/usr/local
+echo "export HADOOP_HOME=hadoop的安装目录" >> ~/.bashrc  
+#例如： echo "export HADOOP_HOME=/usr/local/hadoop-2.8.0" >> ~/.bashrc
+编辑hadoop-2.8.0下的etc/hadoop/hadoop-env.sh
+将未注释的第一行改为：  JAVA_HOME=java的安装目录
+
+在终端输入：/usr/local/hadoop-2.8.0/bin/hadoop version
+
+[root@localhost hadoop-2.8.0]# bin/hadoop version
+Hadoop 2.8.0
+Subversion https://git-wip-us.apache.org/repos/asf/hadoop.git -r 91f2b7a13d1e97be65db92ddabc627cc29ac0009
+Compiled by jdu on 2017-03-17T04:12Z
+Compiled with protoc 2.5.0
+From source with checksum 60125541c2b3e266cbf3becc5bda666
+This command was run using /usr/local/hadoop-2.8.0/share/hadoop/common/hadoop-common-2.8.0.jar
+[root@localhost hadoop-2.8.0]# 
+
+
+
+
