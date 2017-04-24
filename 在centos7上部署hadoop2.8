@@ -117,6 +117,7 @@ java -version
     cd ~/.ssh/                     # 若没有该目录，请先执行一次ssh localhost
     ssh-keygen -t rsa              # 会有提示，都按回车就可以
     cat ./id_rsa.pub >> ./authorized_keys  # 加入授权
+    chmod 600 ~/.ssh/authorized_keys
 
 
 
